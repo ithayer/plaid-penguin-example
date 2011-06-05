@@ -6,7 +6,7 @@
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
                                               com.sun.jmx/jmxri]]
-		 [plaid-pengiun "1.0.0"]]
+		 [org.clojars.ithayer/plaid-penguin "1.0.0"]]
   :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
 		     [lein-javac "1.2.1-SNAPSHOT"]]
   :java-source-path [["gen-java/"]]
