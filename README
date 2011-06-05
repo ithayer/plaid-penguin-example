@@ -19,3 +19,5 @@ Just run:
 >>> lein deps
 >>> cp log4j.properties lib/
 >>> lein run 9000
+
+
