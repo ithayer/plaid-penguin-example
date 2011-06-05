@@ -1,6 +1,6 @@
 # plaid-penguin-example
 
-A simple example of how to use the 'plaid-pengiun library' to set up a
+A simple example of how to use the 'plaid-penguin library' to set up a
 thrift server and client using clojure.
 
 Normally, one would generate the thrift code (you need the thrift
@@ -16,8 +16,6 @@ But this is already done for this example.
 
 Just run: 
 
->>> lein run <port>
-
-eg:
-
+>>> lein deps
+>>> cp log4j.properties lib/
 >>> lein run 9000
