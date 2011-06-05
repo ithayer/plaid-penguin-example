@@ -1,13 +1,23 @@
 # plaid-penguin-example
 
-FIXME: write description
+A simple example of how to use the 'plaid-pengiun library' to set up a
+thrift server and client using clojure.
 
-## Usage
+Normally, one would generate the thrift code (you need the thrift
+tools installed) by running:
 
-FIXME: write
+>>> thrift --gen java simple.thrift
 
-## License
+Then compile those to java using:
 
-Copyright (C) 2011 FIXME
+>>> lein javac
 
-Distributed under the Eclipse Public License, the same as Clojure.
+But this is already done for this example. 
+
+Just run: 
+
+>>> lein run <port>
+
+eg:
+
+>>> lein run 9000

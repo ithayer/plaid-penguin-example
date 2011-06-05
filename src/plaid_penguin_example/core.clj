@@ -1,45 +1,33 @@
 (ns plaid-penguin-example.core
   (:require [clojure.contrib.logging :as lg])
+  (:require [plaid-penguin-example.server :as pp-server])
+  (:require [plaid-penguin-example.client :as pp-client])
   (:import [plaid_penguin_example OpService$Iface OpService$Processor OpService$Client Operation OpType Result])
-  (:import [org.apache.thrift.server TServer TSimpleServer TServer$Args TThreadPoolServer])
-  (:import [org.apache.thrift.transport TServerSocket TServerTransport TTransport TSocket])
-  (:import [org.apache.thrift.protocol TBinaryProtocol])
-  (:use [clojure.contrib.import-static])
   (:gen-class))
 
-(def *handler* (proxy [OpService$Iface] [] 
-		 (do_op [op] 
-			(lg/info "got it") 
-			Result/OK)))
+(def *processor* 
+     (OpService$Processor. 
+      (proxy [OpService$Iface] []
+	(do_op [op]
+	       (lg/info (str "server got: " op))
+	       Result/OK))))
 
-(def *processor* (OpService$Processor. *handler*))
-
-(defn create-simple-server [port]
-  (let [transport (TServerSocket. port)]
-    (TSimpleServer. (.processor (TServer$Args. transport) *processor*))))
-
-(defn create-threaded-server [port]
-  (let [transport (TServerSocket. port)]
-    (TThreadPoolServer. (.processor (TServer$Args. transport) *processor*))))
-
-(defn create-socket [hostname port]
-  (let [transport (TSocket. hostname port)]
-    (.open transport)
-    transport))
-
-(defn create-client [transport]
-  (let [protocol (TBinaryProtocol. transport)]
-    (OpService$Client. protocol)))
-
-(defn repl-start-server []
-  (let [server (create-simple-server 8981)]
-    (.start (Thread. (fn [] (lg/info "listening...") (.serve server) (lg/info "done"))))
+(defn start-example-server [port]
+  (let [server (pp-server/create-multi-threaded port *processor*)]
+    (.start (Thread. (fn [] 
+		       (lg/info "listening...") 
+		       (.serve server)
+		       (lg/info "done"))))
     server))
 
-(defn create-test-op []
-  (doto (Operation.)
-    (.setMessage "test")
-    (.setOp (OpType/SLEEP))))
-
 (defn -main [& args]
-  (print (str "Called with " (apply str (or args [])))))
+  (let [example-server (start-example-server (Integer. (first args)))
+	connection     (pp-client/create-socket "localhost" (Integer. (first args)))
+	client         (pp-client/create OpService$Client connection)
+	test-op        (doto (Operation.)
+			 (.setMessage "test")
+			 (.setOp (OpType/SLEEP)))]
+    (let [result (.do_op client test-op)]
+      (lg/info (str "client got: " result))
+      (.stop example-server))))
+  
