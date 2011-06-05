@@ -1,0 +1,2 @@
+(ns plaid-penguin-example.server
+  (:require [clojure.contrib.logging :as lg])
