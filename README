@@ -1,3 +1,10 @@
+***** 
+This is extremely old and hasn't really been updated -- if you're looking for thrift in clojure,
+there are more up-to-date libraries. for example, check out https://github.com/xsc/thrift-clj
+*****
+
+
+
 # plaid-penguin-example
 
 A simple example of how to use the 'plaid-penguin library' to set up a
